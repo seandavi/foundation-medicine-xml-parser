@@ -12,7 +12,7 @@ import os
 import datetime
 
 '''
-This script connects to the cc1 share drive with the SOM, 
+This script connects to the a folder with Foundation XML files and then 
 parses and summarizes returned mutation information from the FMI patient reports 
 in one Excel file, and outputs csvs for further analysis  
 '''
