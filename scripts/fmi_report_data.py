@@ -19,9 +19,9 @@ in one Excel file, and outputs csvs for further analysis
 
 cwd = os.getcwd()
 
-fmi_dir = '/Volumes/cc1/FMI_reports/'
+fmi_dir = '/mnt/'
 
-xml = fmi_dir + '/*.xml'
+xml = fmi_dir + '*.xml'
 files = [path.basename(x) for x in glob(xml)]
 
 global todays_date
