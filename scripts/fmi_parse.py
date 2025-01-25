@@ -1,4 +1,4 @@
-from uccc.parser import process_fmi_data
+from foundation_medicine_parser.parser import process_fmi_data
 import argparse
 
 def main():
