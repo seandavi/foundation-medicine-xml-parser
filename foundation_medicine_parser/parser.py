@@ -282,12 +282,13 @@ def write_report_frames_to_csv(report_frames, output_directory):
         df_final.write_csv(output_directory / (field.name + '.csv'))
 
 
-def process_fmi_data(results_directory: str):
-    results_path = pathlib.Path(results_directory)
+def process_fmi_data(input_directory, output_directory):
+    results_path = pathlib.Path(input_directory)
+    output_path = pathlib.Path(output_directory)
     report_files = list(results_path.glob('*.xml'))
     report_frames = generate_report_frames(report_files)
-    write_report_frames_to_csv(report_frames, results_path)
-    write_report_frames_to_excel(report_frames, results_path / 'fmi_report.xlsx')
+    write_report_frames_to_csv(report_frames, output_path)
+    write_report_frames_to_excel(report_frames, output_path / 'fmi_report.xlsx')
     
 
      

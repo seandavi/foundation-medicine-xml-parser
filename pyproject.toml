@@ -10,3 +10,6 @@ dependencies = [
     "rich>=13.9.4",
     "xlsxwriter>=3.2.1",
 ]
+
+[project.scripts]
+process_fmi = "foundation_medicine_parser.process_fmi:main"
