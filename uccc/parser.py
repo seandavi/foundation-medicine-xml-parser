@@ -3,6 +3,8 @@ import xml.etree.ElementTree as ET
 import polars as pl
 from dateutil import parser
 import xlsxwriter
+import pathlib
+from rich.progress import track
 
 namespace = {'ns': 'http://foundationmedicine.com/compbio/variant-report-external'}
 
@@ -222,16 +224,10 @@ class ReportFrameContainer:
     biomarkers: pl.DataFrame
     assay_and_patient_data: pl.DataFrame
     
-
-if __name__ == '__main__':
-    import pathlib
-    results_path = pathlib.Path('/mnt/00_results')
-    
-    report_files = list(results_path.glob('*.xml'))
-    
+def generate_report_frames(report_files):
     report_frames = []
     
-    for report_file in report_files:
+    for report_file in track(report_files):
         root = get_xml_root_from_file(report_file)
         short_variants_df = short_variants(root)
         copy_number_alterations_df = copy_number_alterations(root)
@@ -248,20 +244,51 @@ if __name__ == '__main__':
         )
         report_frames.append(report_frame_container)
         
-        
-    # get full assay_and_patient_data df
+    return report_frames
 
-    with xlsxwriter.Workbook('report_frames.xlsx') as writer:
+def write_report_frames_to_excel(report_frames, output_file):
+    
+    output_directory = output_file.parent
+    output_directory.mkdir(parents=True, exist_ok=True)
+    
+    with xlsxwriter.Workbook(output_file) as writer:
         
         assay_and_patient_data_dfs = [getattr(rep, 'assay_and_patient_data') for rep in report_frames]
         assay_and_patient_data_df = pl.concat(assay_and_patient_data_dfs)
         assay_and_patient_data_df.write_excel(writer, worksheet='assay_and_patient_data')
-        for field in dataclasses.fields(report_frame_container):
+        
+        for field in dataclasses.fields(report_frames[0]):
             if field.name == 'assay_and_patient_data':
                 continue
             l = [getattr(rep, field.name) for rep in report_frames]
             df = pl.concat(l)
             df_final = df.join(assay_and_patient_data_df, on='report_id')
             df_final.write_excel(writer, worksheet=field.name)
+            
+def write_report_frames_to_csv(report_frames, output_directory):
     
+    output_directory.mkdir(parents=True, exist_ok=True)
+    
+    assay_and_patient_data_dfs = [getattr(rep, 'assay_and_patient_data') for rep in report_frames]
+    assay_and_patient_data_df = pl.concat(assay_and_patient_data_dfs)
+    assay_and_patient_data_df.write_csv(output_directory / 'assay_and_patient_data.csv')
+    
+    for field in dataclasses.fields(report_frames[0]):
+        if field.name == 'assay_and_patient_data':
+            continue
+        l = [getattr(rep, field.name) for rep in report_frames]
+        df = pl.concat(l)
+        df_final = df.join(assay_and_patient_data_df, on='report_id')
+        df_final.write_csv(output_directory / (field.name + '.csv'))
+
+
+def process_fmi_data(results_directory: str):
+    results_path = pathlib.Path(results_directory)
+    report_files = list(results_path.glob('*.xml'))
+    report_frames = generate_report_frames(report_files)
+    write_report_frames_to_csv(report_frames, results_path)
+    write_report_frames_to_excel(report_frames, results_path / 'fmi_report.xlsx')
+    
+
+     
         

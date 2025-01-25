@@ -1,5 +1,5 @@
 [project]
-name = "foundation-app"
+name = "uccc"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
@@ -7,5 +7,6 @@ requires-python = ">=3.9"
 dependencies = [
     "polars>=1.21.0",
     "python-dateutil>=2.9.0.post0",
+    "rich>=13.9.4",
     "xlsxwriter>=3.2.1",
 ]
