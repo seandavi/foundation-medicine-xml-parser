@@ -264,6 +264,8 @@ def write_report_frames_to_excel(report_frames, output_file):
             df = pl.concat(l)
             df_final = df.join(assay_and_patient_data_df, on='report_id')
             df_final.write_excel(writer, worksheet=field.name)
+    
+    return str(output_file)
             
 def write_report_frames_to_csv(report_frames, output_directory):
     
@@ -280,16 +282,16 @@ def write_report_frames_to_csv(report_frames, output_directory):
         df = pl.concat(l)
         df_final = df.join(assay_and_patient_data_df, on='report_id')
         df_final.write_csv(output_directory / (field.name + '.csv'))
+        
+    output_files = [str(output_directory / (field.name + '.csv')) for field in dataclasses.fields(report_frames[0])]
+    return output_files
 
 
-def process_fmi_data(input_directory, output_directory):
+def process_fmi_data(input_directory, output_directory) -> dict:
     results_path = pathlib.Path(input_directory)
     output_path = pathlib.Path(output_directory)
     report_files = list(results_path.glob('*.xml'))
     report_frames = generate_report_frames(report_files)
-    write_report_frames_to_csv(report_frames, output_path)
-    write_report_frames_to_excel(report_frames, output_path / 'fmi_report.xlsx')
-    
-
-     
-        
+    csv_files = write_report_frames_to_csv(report_frames, output_path)
+    excel_file = write_report_frames_to_excel(report_frames, output_path / 'fmi_report.xlsx')
+    return {"csv_files": csv_files, "excel_file": excel_file}
