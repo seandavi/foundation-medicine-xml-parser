@@ -1,6 +1,6 @@
 # Foundation Medicine Parser
 
-Foundation Medicine [1] is a company that provides comprehensive genomic profiling services for cancer patients. The Foundation Medicine Parser is a Python package that allows users to parse the Foundation Medicine reports and extract the relevant information. The package is designed to work with the Foundation Medicine reports in XML format.
+[Foundation Medicine][1] is a company that provides comprehensive genomic profiling services for cancer patients. The Foundation Medicine Parser is a Python package that allows users to parse the Foundation Medicine reports and extract the relevant information. The package is designed to work with the Foundation Medicine reports in XML format.
 
 ## Installation
 
@@ -35,3 +35,5 @@ output_dir
 
 The CSV files contain the parsed data in a tabular format. The Excel file contains the same data in separate
 worksheets.
+
+[1]: https://www.foundationmedicine.com/
