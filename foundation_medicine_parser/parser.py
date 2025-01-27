@@ -294,4 +294,4 @@ def process_fmi_data(input_directory, output_directory) -> dict:
     report_frames = generate_report_frames(report_files)
     csv_files = write_report_frames_to_csv(report_frames, output_path)
     excel_file = write_report_frames_to_excel(report_frames, output_path / 'fmi_report.xlsx')
-    return {"csv_files": csv_files, "excel_file": excel_file}
+    return {"csv_files": csv_files, "excel_file": excel_file, "report_count": len(report_files)}
