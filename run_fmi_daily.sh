@@ -6,9 +6,13 @@ chmod 0444 /mnt/00_results/*xml
 chmod 0444 /mnt/00_results/*pdf
 
 cp -r 20* /mnt/00_results/
-latest=`ls -d 20* | head -1`
+latest=`ls -d 20* | tail -1`
 echo $latest
-cp -r 20* /mnt/00_results/
+cp -rv 20* /mnt/00_results/
 rm -rf /mnt/00_results/00_latest
 mv $latest /mnt/00_results/00_latest
-/usr/bin/rclone --config /home/davsean/.config/rclone/rclone.conf --log-file /tmp/rclone.log sync /mnt/00_results/ fmi_onedrive:FMI_REPORTS
+echo syncing
+echo '  latest'
+/usr/bin/rclone --config /home/davsean/.config/rclone/rclone.conf --log-file /tmp/rclone.log sync /mnt/00_results/00_latest fmi_onedrive:FMI_REPORTS
+echo '  all'
+/usr/bin/rclone --config /home/davsean/.config/rclone/rclone.conf --log-file /tmp/rclone.log sync /mnt/00_results/ fmi_onedrive:FMI_REPORTS/full/

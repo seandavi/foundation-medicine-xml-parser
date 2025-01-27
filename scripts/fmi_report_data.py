@@ -19,7 +19,7 @@ in one Excel file, and outputs csvs for further analysis
 
 cwd = os.getcwd()
 
-fmi_dir = '/mnt/'
+fmi_dir = '/mnt/00_results/'
 
 xml = fmi_dir + '*.xml'
 files = [path.basename(x) for x in glob(xml)]
@@ -188,10 +188,11 @@ anon_mel_xml = [elem + '.xml' for elem in anon_mel]
 clean_files = [elem for elem in files if elem not in anon_mel_xml]
 files = clean_files
 
-patientframe = pd.DataFrame()
-variantframe = pd.DataFrame()
-copyframe = pd.DataFrame()
-funframe = pd.DataFrame()
+patientframes = []
+variantframes = []
+copyframes = []
+funframes = []
+
 
 for file in files:
     
@@ -203,11 +204,16 @@ for file in files:
     cf = cna_requests_frame(root)
     fu = fusion_requests(root)
     
-    funframe = funframe.append(fu)
-    patientframe = patientframe.append(df)
-    variantframe = variantframe.append(sv)
-    copyframe = copyframe.append(cf)
+    funframes.append(fu)
+    patientframes.append(df)
+    variantframes.append(sv)
+    copyframes.append(cf)
 
+
+funframe = pd.concat(funframes)
+patientframe = pd.concat(patientframes)
+variantframe = pd.concat(variantframes)
+copyframe = pd.concat(copyframes)
 
 run_date = (cwd + '/' + todays_date + '/')
 if not os.path.exists(run_date):
