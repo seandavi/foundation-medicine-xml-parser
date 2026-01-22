@@ -185,6 +185,11 @@ def assay_and_patient_data(root):
         "test_type": report_data_tag.get('test-type'),
     }
     res.update(report_data)
+    
+    comment = root.findtext('.//comments/comment/text', None)
+    
+    res['pathologist_comment'] = comment
+    
     res2 = pl.DataFrame(res, schema=pl.Schema({
         "report_id": pl.Utf8,
         "mrn": pl.Utf8,
@@ -211,6 +216,7 @@ def assay_and_patient_data(root):
         "study": pl.Utf8,
         "test_request": pl.Utf8,
         "test_type": pl.Utf8,
+        "pathologist_comment": pl.Utf8,
     }))
     
     return res2
