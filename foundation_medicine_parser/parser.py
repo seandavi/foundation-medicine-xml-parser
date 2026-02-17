@@ -171,6 +171,10 @@ def assay_and_patient_data(root):
     for date_field in ['dob', 'collection_date', 'received_date']:
         if date_field in res and res[date_field]:
             res[date_field] = parser.parse(res[date_field])     
+    
+    # fix mrn to be a number (strip all non-digit characters)
+    if res['mrn']:
+        res['mrn'] = ''.join(filter(str.isdigit, res['mrn']))
         
     report_data_tag = root.find('.//ns:variant-report', namespace)
     report_data = {
